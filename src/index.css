@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+   
+
+    --color-bg: #1f2937;       /* dark bg */
+    --color-text: #f9fafb;     /* dark text */
+  }
+
+  .dark {
+     --color-bg: #f9fafb;       /* light bg */
+    --color-text: #1f2937;     /* light text */
+  }
+   html {
+    transition: background 0.3s, color 0.3s;
+  }
+}
+
+
+
