@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Truck, CalendarCheck, History, HelpCircle, CreditCard, FileText } from 'lucide-react';
-import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
+import { auth } from '../firebase';
+import { BookOpen, Users, MessageSquare, FileText, LogOut, MessageCircle, Moon, Sun } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 function Home() {
   const navigate = useNavigate();
-  const email = localStorage.getItem("userEmail");
+  const [darkMode, setDarkMode] = useState(false);
+
+  const toggleTheme = () => setDarkMode(!darkMode);
 
   const handleLogout = async () => {
     try {
@@ -20,56 +22,118 @@ function Home() {
   };
 
   const features = [
-    { icon: Truck, title: "Book Tanker", desc: "Request a tanker quickly with a few clicks.", color: "text-blue-500", path: "/bookings" },
-    { icon: CalendarCheck, title: "Manage Bookings", desc: "View and manage your upcoming bookings.", color: "text-green-500", path: "/manage" },
-    { icon: History, title: "Booking History", desc: "Track all your previous bookings easily.", color: "text-purple-500", path: "/history" },
-    { icon: HelpCircle, title: "Help & Support", desc: "Need assistance? We are here for you.", color: "text-yellow-500", path: "/help" },
-    { icon: CreditCard, title: "Payments", desc: "Secure online payments for your bookings.", color: "text-red-500", path: "/payments" },
-    { icon: FileText, title: "Reports", desc: "Download or view your monthly reports.", color: "text-pink-500", path: "/reports" },
+    { icon: BookOpen, title: "Shared Notes", desc: "Collaborate and share study notes with your peers.", path: "/notes" },
+    { icon: Users, title: "Study Groups", desc: "Join or form groups for better collaboration.", path: "/groups" },
+    { icon: MessageSquare, title: "Discussions", desc: "Engage in meaningful topic discussions.", path: "/discussions" },
+    { icon: FileText, title: "Assignments", desc: "Manage, submit, and track assignments.", path: "/assignments" },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 dark:from-gray-900 dark:via-black dark:to-black text-gray-900 dark:text-gray-100 p-6 relative">
-      {/* Sticky Logout button */}
-      <div className="fixed top-25 right-4 z-10">
+    <div className={`relative min-h-screen overflow-y-auto font-sans ${darkMode ? 'bg-black text-white' : 'bg-white text-black'}`}>
+      {/* Background video */}
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <video
+          autoPlay
+          muted
+          loop
+          className="w-full h-full object-cover"
+          style={{ opacity: 0.6 }} // make video visible but subtle
+        >
+          <source src="/videos/0418.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-black/20"></div> {/* optional soft overlay */}
+      </div>
+
+      {/* Buttons */}
+      <div className="fixed top-4 right-4 z-40 flex gap-2">
+        <button
+          onClick={toggleTheme}
+          className={`p-2 rounded-full shadow-md ${
+            darkMode ? 'bg-yellow-400 hover:bg-yellow-500 text-black' : 'bg-gray-800 hover:bg-gray-900 text-white'
+          }`}
+        >
+          {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+        </button>
+
         <button
           onClick={handleLogout}
-          className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition"
+          className="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-full shadow-md flex items-center gap-1"
         >
-          Logout
+          <LogOut size={16} /> Logout
         </button>
       </div>
 
-      {/* Hero banner */}
-      <motion.div 
-        initial={{ opacity: 0, y: -30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="text-center mt-12 mb-8"
-      >
-        <h1 className="text-4xl font-bold mb-2 text-blue-700 dark:text-blue-400">PMC WaterLine</h1>
-        <p className="text-gray-600 dark:text-gray-400">Efficient. Reliable. Transparent. Book and manage tankers seamlessly.</p>
-      </motion.div>
+      {/* Content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 py-16 space-y-20">
+        {/* Hero */}
+        <motion.div
+          initial={{ opacity: 0, y: -40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="text-center"
+        >
+          <h1 className="text-4xl sm:text-6xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            Welcome to NoteNode ✨
+          </h1>
+          <p className="mt-2 max-w-2xl mx-auto text-lg text-blue-100">
+            Your ultimate platform for collaborative learning.
+          </p>
+        </motion.div>
 
-      {/* Features grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {features.map((item, index) => (
-          <motion.div
-            key={index}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-            className="cursor-pointer"
-            onClick={() => navigate(item.path)}
-          >
-            <div
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-2xl transition duration-300 flex flex-col items-center text-center"
+        {/* Features */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {features.map((item, i) => (
+            <motion.div
+              key={i}
+              whileHover={{ scale: 1.05 }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.2, duration: 0.6 }}
+              onClick={() => navigate(item.path)}
+              className="cursor-pointer backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition"
             >
-              <item.icon size={40} className={`mb-3 ${item.color}`} />
-              <h2 className="text-lg font-semibold mb-1">{item.title}</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{item.desc}</p>
-            </div>
-          </motion.div>
-        ))}
+              <item.icon size={36} className="mb-3 text-blue-300" />
+              <h3 className="text-lg font-semibold">{item.title}</h3>
+              <p className="text-sm text-blue-100">{item.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* WhatsApp Community */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="flex justify-center"
+        >
+          <div className="flex flex-col items-center justify-center text-center bg-green-500/20 p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h3 className="text-xl font-bold mb-3">Join our WhatsApp Community</h3>
+            <button
+              onClick={() => window.open('https://chat.whatsapp.com/', '_blank')}
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full shadow flex items-center justify-center gap-2"
+            >
+              <MessageCircle size={18} /> Join Now
+            </button>
+          </div>
+        </motion.div>
+
+        {/* Footer */}
+        <footer className="mt-16 text-center text-blue-100 space-y-2">
+          <p className="text-sm">Follow us on</p>
+          <div className="flex justify-center gap-6 text-white text-2xl">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-pink-400">
+              <i className="fab fa-instagram"></i>
+            </a>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500">
+              <i className="fab fa-facebook"></i>
+            </a>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-blue-300">
+              <i className="fab fa-twitter"></i>
+            </a>
+          </div>
+          <p className="text-xs">&copy; {new Date().getFullYear()} NoteNode — Made for learners, by learners.</p>
+        </footer>
       </div>
     </div>
   );
