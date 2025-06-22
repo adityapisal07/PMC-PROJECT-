@@ -27,7 +27,10 @@ function Login() {
       localStorage.setItem("userEmail", userCredential.user.email);
 
       // Navigate to home page
-      navigate('/');
+      navigate("/dashboard", { replace: true });
+
+
+
     } catch (err) {
       console.error(err);
       setError(`⚠ ${err.message}`);
@@ -39,7 +42,8 @@ function Login() {
       const result = await signInWithPopup(auth, googleProvider);
       console.log("Google user:", result.user);
       localStorage.setItem("userEmail", result.user.email);
-      navigate('/');
+      navigate('/dashboard', { replace: true });
+
     } catch (err) {
       console.error("Google sign-in error", err);
       setError(`⚠ ${err.message}`);

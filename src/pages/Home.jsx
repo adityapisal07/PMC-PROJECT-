@@ -2,7 +2,16 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
-import { BookOpen, Users, MessageSquare, FileText, LogOut, MessageCircle, Moon, Sun } from 'lucide-react';
+import {
+  BookOpen,
+  Users,
+  MessageSquare,
+  FileText,
+  ArrowRight,
+  MessageCircle,
+  Moon,
+  Sun,
+} from 'lucide-react';
 import { motion } from 'framer-motion';
 
 function Home() {
@@ -11,71 +20,101 @@ function Home() {
 
   const toggleTheme = () => setDarkMode(!darkMode);
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      localStorage.removeItem("userEmail");
-      navigate('/login');
-    } catch (err) {
-      console.error("Logout failed", err);
-    }
-  };
-
   const features = [
-    { icon: BookOpen, title: "Shared Notes", desc: "Collaborate and share study notes with your peers.", path: "/notes" },
-    { icon: Users, title: "Study Groups", desc: "Join or form groups for better collaboration.", path: "/groups" },
-    { icon: MessageSquare, title: "Discussions", desc: "Engage in meaningful topic discussions.", path: "/discussions" },
-    { icon: FileText, title: "Assignments", desc: "Manage, submit, and track assignments.", path: "/assignments" },
+    {
+      icon: BookOpen,
+      title: 'Shared Notes',
+      desc: 'Collaborate and share study notes with your peers.',
+      path: '/notes',
+    },
+    {
+      icon: Users,
+      title: 'Study Groups',
+      desc: 'Join or form groups for better collaboration.',
+      path: '/groups',
+    },
+    {
+      icon: MessageSquare,
+      title: 'Discussions',
+      desc: 'Engage in meaningful topic discussions.',
+      path: '/discussions',
+    },
+    {
+      icon: FileText,
+      title: 'Assignments',
+      desc: 'Manage, submit, and track assignments.',
+      path: '/assignments',
+    },
   ];
 
   return (
-    <div className={`relative min-h-screen overflow-y-auto font-sans ${darkMode ? 'bg-black text-white' : 'bg-white text-black'}`}>
-      {/* Background video */}
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <video
-          autoPlay
-          muted
-          loop
-          className="w-full h-full object-cover"
-          style={{ opacity: 0.6 }} // make video visible but subtle
+    <div
+      className={`min-h-screen overflow-y-auto font-sans transition-colors duration-500 ${
+        darkMode ? 'bg-black text-white' : 'bg-white text-black'
+      }`}
+    >
+      {/* Navbar */}
+      <nav
+        className={`fixed top-0 left-0 w-full flex justify-between items-center p-4 z-50 shadow-md ${
+          darkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'
+        }`}
+      >
+        <div
+          className="text-xl font-bold cursor-pointer"
+          onClick={() => navigate('/')}
         >
-          <source src="/videos/0418.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-black/20"></div> {/* optional soft overlay */}
-      </div>
-
-      {/* Buttons */}
-      <div className="fixed top-4 right-4 z-40 flex gap-2">
-        <button
-          onClick={toggleTheme}
-          className={`p-2 rounded-full shadow-md ${
-            darkMode ? 'bg-yellow-400 hover:bg-yellow-500 text-black' : 'bg-gray-800 hover:bg-gray-900 text-white'
-          }`}
-        >
-          {darkMode ? <Sun size={18} /> : <Moon size={18} />}
-        </button>
-
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-full shadow-md flex items-center gap-1"
-        >
-          <LogOut size={16} /> Logout
-        </button>
-      </div>
+          NoteNode
+        </div>
+        <div className="hidden md:flex gap-4">
+          <button onClick={() => navigate('/')} className="hover:underline">
+            Home
+          </button>
+          <button onClick={() => navigate('/about')} className="hover:underline">
+            About
+          </button>
+          <button onClick={() => navigate('/features')} className="hover:underline">
+            Features
+          </button>
+          <button onClick={() => navigate('/contact')} className="hover:underline">
+            Contact
+          </button>
+          <button
+            onClick={() => navigate('/login')}
+            className="bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 hover:from-red-500 hover:via-pink-500 hover:to-purple-500 text-white px-4 py-1.5 rounded-full shadow-md flex items-center gap-1 transition-all duration-500"
+          >
+            Connect <ArrowRight size={16} />
+          </button>
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={toggleTheme}
+            className={`p-2 rounded-full shadow-md transition-colors duration-500 ${
+              darkMode
+                ? 'bg-yellow-400 hover:bg-yellow-500 text-black'
+                : 'bg-gray-800 hover:bg-gray-900 text-white'
+            }`}
+          >
+            {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+        </div>
+      </nav>
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 py-16 space-y-20">
+      <div className="max-w-7xl mx-auto px-4 pt-20 pb-16 space-y-20">
         {/* Hero */}
         <motion.div
           initial={{ opacity: 0, y: -40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="text-center"
+          className="text-center mt-4"
         >
-          <h1 className="text-4xl sm:text-6xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-            Welcome to NoteNode ✨
+          <h1 className="text-4xl sm:text-6xl font-bold drop-shadow-lg">
+            Welcome to{' '}
+            <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              NoteNode ✨
+            </span>
           </h1>
-          <p className="mt-2 max-w-2xl mx-auto text-lg text-blue-100">
+          <p className="mt-2 max-w-2xl mx-auto text-lg">
             Your ultimate platform for collaborative learning.
           </p>
         </motion.div>
@@ -90,11 +129,15 @@ function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.2, duration: 0.6 }}
               onClick={() => navigate(item.path)}
-              className="cursor-pointer backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition"
+              className={`cursor-pointer border rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-colors duration-500 ${
+                darkMode
+                  ? 'bg-white/10 border-white/20'
+                  : 'bg-black/10 border-black/20'
+              }`}
             >
               <item.icon size={36} className="mb-3 text-blue-300" />
               <h3 className="text-lg font-semibold">{item.title}</h3>
-              <p className="text-sm text-blue-100">{item.desc}</p>
+              <p className="text-sm">{item.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -119,20 +162,41 @@ function Home() {
         </motion.div>
 
         {/* Footer */}
-        <footer className="mt-16 text-center text-blue-100 space-y-2">
+        <footer
+          className={`mt-16 text-center space-y-2 ${
+            darkMode ? 'text-white/80' : 'text-black/80'
+          }`}
+        >
           <p className="text-sm">Follow us on</p>
-          <div className="flex justify-center gap-6 text-white text-2xl">
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-pink-400">
+          <div className="flex justify-center gap-6 text-2xl">
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-pink-400"
+            >
               <i className="fab fa-instagram"></i>
             </a>
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500">
+            <a
+              href="https://facebook.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-blue-500"
+            >
               <i className="fab fa-facebook"></i>
             </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-blue-300">
+            <a
+              href="https://twitter.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-blue-300"
+            >
               <i className="fab fa-twitter"></i>
             </a>
           </div>
-          <p className="text-xs">&copy; {new Date().getFullYear()} NoteNode — Made for learners, by learners.</p>
+          <p className="text-xs">
+            &copy; {new Date().getFullYear()} NoteNode — Made for learners, by learners.
+          </p>
         </footer>
       </div>
     </div>
